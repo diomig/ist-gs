@@ -43,7 +43,9 @@ def print_help():
     for po in prompt_options:
         print(f"{su.bold}{su.po}{su.normal}: {prompt_options[po]}")
 
-    # setup
+
+# setup
+def gs_shell_radio_setup():
     spi, cs, reset = rpigs_rx_spi_config()
     rxtx_switch = RXTXSwitch(board.D26, board.D17, board.D27)
     radio = initialize_radio(spi, cs, reset, rxtx_switch=rxtx_switch)
