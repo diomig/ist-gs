@@ -41,7 +41,7 @@ flattend_prompt_options = [v for pov in prompt_options.values() for v in pov]
 def print_help():
     print(f"\n{su.yellow}Groundstation shell help:{su.normal}")
     for po in prompt_options:
-        print(f"{su.bold}{su.po}{su.normal}: {prompt_options[po]}")
+        print(f"{su.bold}{po}{su.normal}: {prompt_options[po]}")
 
 
 # setup
