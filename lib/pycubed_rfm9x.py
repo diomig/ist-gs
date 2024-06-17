@@ -14,8 +14,10 @@ http: www.airspayce.com/mikem/arduino/RadioHead/
 """
 import random
 import time
+
 import adafruit_bus_device.spi_device as spidev
 from micropython import const
+
 import tasko
 
 HAS_SUPERVISOR = False
@@ -30,9 +32,10 @@ except ImportError:
 
 try:
     from typing import Optional, Type
-    from digitalio import DigitalInOut
+
     from busio import SPI
-    from circuitpython_typing import WriteableBuffer, ReadableBuffer
+    from circuitpython_typing import ReadableBuffer, WriteableBuffer
+    from digitalio import DigitalInOut
 
     try:
         from typing import Literal
@@ -228,7 +231,8 @@ class RFM9x:
 
     operation_mode = _RegisterBits(_RH_RF95_REG_01_OP_MODE, bits=3)
 
-    low_frequency_mode = _RegisterBits(_RH_RF95_REG_01_OP_MODE, offset=3, bits=1)
+    low_frequency_mode = _RegisterBits(
+        _RH_RF95_REG_01_OP_MODE, offset=3, bits=1)
 
     modulation_type = _RegisterBits(_RH_RF95_REG_01_OP_MODE, offset=5, bits=2)
 
@@ -243,7 +247,8 @@ class RFM9x:
 
     pa_dac = _RegisterBits(_RH_RF95_REG_4D_PA_DAC, bits=3)
 
-    dio0_mapping = _RegisterBits(_RH_RF95_REG_40_DIO_MAPPING1, offset=6, bits=2)
+    dio0_mapping = _RegisterBits(
+        _RH_RF95_REG_40_DIO_MAPPING1, offset=6, bits=2)
 
     auto_agc = _RegisterBits(_RH_RF95_REG_26_MODEM_CONFIG3, offset=2, bits=1)
 
@@ -257,7 +262,8 @@ class RFM9x:
 
     auto_ifon = _RegisterBits(_RH_RF95_DETECTION_OPTIMIZE, offset=7, bits=1)
 
-    detection_optimize = _RegisterBits(_RH_RF95_DETECTION_OPTIMIZE, offset=0, bits=3)
+    detection_optimize = _RegisterBits(
+        _RH_RF95_DETECTION_OPTIMIZE, offset=0, bits=3)
 
     bw_bins = (7800, 10400, 15600, 20800, 31250, 41700, 62500, 125000, 250000)
 
@@ -272,12 +278,13 @@ class RFM9x:
         high_power: bool = True,
         baudrate: int = 5000000,
         agc: bool = False,
-        crc: bool = True
+        crc: bool = True,
     ) -> None:
         self.high_power = high_power
         # Device support SPI mode 0 (polarity & phase = 0) up to a max of 10mhz.
         # Set Default Baudrate to 5MHz to avoid problems
-        self._device = spidev.SPIDevice(spi, cs, baudrate=baudrate, polarity=0, phase=0)
+        self._device = spidev.SPIDevice(
+            spi, cs, baudrate=baudrate, polarity=0, phase=0)
         # Setup reset as a digital output - initially High
         # This line is pulled low as an output quickly to trigger a reset.
         self._reset = reset
@@ -300,7 +307,8 @@ class RFM9x:
         time.sleep(0.01)
         self.long_range_mode = True
         if self.operation_mode != SLEEP_MODE or not self.long_range_mode:
-            raise RuntimeError("Failed to configure radio for LoRa mode, check wiring!")
+            raise RuntimeError(
+                "Failed to configure radio for LoRa mode, check wiring!")
         # clear default setting for access to LF registers if frequency > 525MHz
         if frequency > 525:
             self.low_frequency_mode = 0
@@ -392,23 +400,22 @@ class RFM9x:
         # buffer.  If length is not specified (the default) the entire buffer
         # will be filled.
         if length is None:
-            length = len(buf)+1
-        command = bytearray(length+1)
-        readbuf = bytearray(length+1)
+            length = len(buf) + 1
+        command = bytearray(length + 1)
+        readbuf = bytearray(length + 1)
         with self._device as device:
-            command[0] = address & 0x7F  # Strip out top bit to set 0 value (read).
-            
-            #device.write(self._BUFFER, end=1)
-            #device.readinto(buf, end=length)
-            #device.write_readinto(self._BUFFER, buf, out_end=1, in_end=length)
-            
-            #addr = bytearray(2)
-            #addr[0] = address & 0x7F
+            # Strip out top bit to set 0 value (read).
+            command[0] = address & 0x7F
 
-        
-            device.write_readinto(command, readbuf)#, in_end=length)
+            # device.write(self._BUFFER, end=1)
+            # device.readinto(buf, end=length)
+            # device.write_readinto(self._BUFFER, buf, out_end=1, in_end=length)
+
+            # addr = bytearray(2)
+            # addr[0] = address & 0x7F
+
+            device.write_readinto(command, readbuf)  # , in_end=length)
             buf[:length] = readbuf[1:]
-
 
     def _read_until_flag(self, address, buf, flag):
         # read bytes from the given address until flag is true
@@ -417,13 +424,14 @@ class RFM9x:
             buf[idx] = self._read_u8(address)
             idx += 1
             if idx > len(buf):
-                raise RuntimeError(f"Overflow reading into buffer of length {len(buf)}")
+                raise RuntimeError(
+                    f"Overflow reading into buffer of length {len(buf)}")
         return idx
 
     def _read_u8(self, address: int) -> int:
         # Read a single byte from the provided address and return it.
         self._read_into(address, self._BUFFER, length=1)
-        #print('self._BUFFER = ', self._BUFFER)
+        # print('self._BUFFER = ', self._BUFFER)
         return self._BUFFER[0]
 
     def _write_from(
@@ -668,7 +676,8 @@ class RFM9x:
         else:
             self.detection_optimize = 0x3
 
-        self._write_u8(_RH_RF95_DETECTION_THRESHOLD, 0x0C if val == 6 else 0x0A)
+        self._write_u8(_RH_RF95_DETECTION_THRESHOLD,
+                       0x0C if val == 6 else 0x0A)
         self._write_u8(
             _RH_RF95_REG_1E_MODEM_CONFIG2,
             (
@@ -719,7 +728,7 @@ class RFM9x:
         destination: Optional[int] = None,
         node: Optional[int] = None,
         identifier: Optional[int] = None,
-        flags: Optional[int] = None
+        flags: Optional[int] = None,
     ) -> bool:
         """Send a string of data using the transmitter.
         You can only send 252 bytes at a time
@@ -743,7 +752,8 @@ class RFM9x:
         # pylint: enable=len-as-condition
         self.idle()  # Stop receiving to clear FIFO and keep it clear.
         # Fill the FIFO with a packet to send.
-        self._write_u8(_RH_RF95_REG_0D_FIFO_ADDR_PTR, 0x00)  # FIFO starts at 0.
+        # FIFO starts at 0.
+        self._write_u8(_RH_RF95_REG_0D_FIFO_ADDR_PTR, 0x00)
         # Combine header and data to form payload
         payload = bytearray(4)
         if destination is None:  # use attribute
@@ -839,7 +849,7 @@ class RFM9x:
         keep_listening: bool = True,
         with_header: bool = False,
         with_ack: bool = False,
-        timeout: Optional[float] = None
+        timeout: Optional[float] = None,
     ) -> Optional[bytearray]:
         """Wait to receive a packet from the receiver. If a packet is found the payload bytes
         are returned, otherwise None is returned (which indicates the timeout elapsed with no
@@ -897,11 +907,12 @@ class RFM9x:
                 # Read the data from the FIFO.
                 # Read the length of the FIFO.
                 fifo_length = self._read_u8(_RH_RF95_REG_13_RX_NB_BYTES)
-                print(f'fifo-length: {fifo_length}')
+                print(f"fifo-length: {fifo_length}")
                 # Handle if the received packet is too small to include the 4 byte
                 # RadioHead header and at least one byte of data --reject this packet and ignore it.
                 if fifo_length > 0:  # read and clear the FIFO if anything in it
-                    current_addr = self._read_u8(_RH_RF95_REG_10_FIFO_RX_CURRENT_ADDR)
+                    current_addr = self._read_u8(
+                        _RH_RF95_REG_10_FIFO_RX_CURRENT_ADDR)
                     self._write_u8(_RH_RF95_REG_0D_FIFO_ADDR_PTR, current_addr)
                     packet = bytearray(fifo_length)
                     # Read the packet.
@@ -955,16 +966,11 @@ class RFM9x:
         self._write_u8(_RH_RF95_REG_12_IRQ_FLAGS, 0xFF)
         return packet
 
+
 class Radiohead:
 
-    def __init__(self,
-                 tx_device,
-                 rx_device=None,
-                 rxtx_switch=None,
-                 checksum=True
-                 ):
-        """
-        """
+    def __init__(self, tx_device, rx_device=None, rxtx_switch=None, checksum=True):
+        """ """
 
         self.tx_device = tx_device
 
@@ -1063,6 +1069,7 @@ class Radiohead:
             self.rxtx_switch.transmit()
 
         # pylint: disable=too-many-branches
+
     async def send(
         self,
         data,
@@ -1072,7 +1079,7 @@ class Radiohead:
         node=None,
         identifier=None,
         flags=None,
-        debug=False
+        debug=False,
     ):
         """Send a string of data using the transmitter.
         You can only send 57 bytes at a time
@@ -1099,7 +1106,9 @@ class Radiohead:
 
         # Combine header and data to form payload
         payload = bytearray(5)
-        payload[0] = len(payload) + len(data) - 1  # first byte is length to meet semtech FSK requirements (pg 74)
+        payload[0] = (
+            len(payload) + len(data) - 1
+        )  # first byte is length to meet semtech FSK requirements (pg 74)
         if destination is None:  # use attribute
             payload[1] = self.destination
         else:  # use kwarg
@@ -1201,18 +1210,28 @@ class Radiohead:
         return self.tx_device.send_with_ack(data)
 
     async def receive(
-        self, *, keep_listening=True, with_header=False, with_ack=False, timeout=None, debug=False
+        self,
+        *,
+        keep_listening=True,
+        with_header=False,
+        with_ack=False,
+        timeout=None,
+        debug=False,
     ):
         self.listen()
-        packet = await self.rx_device.receive(keep_listening=keep_listening,
-                                              with_header=with_header,
-                                              with_ack=with_ack,
-                                              timeout=timeout)
+        packet = await self.rx_device.receive(
+            keep_listening=keep_listening,
+            with_header=with_header,
+            with_ack=with_ack,
+            timeout=timeout,
+        )
         if packet is None:
             return None
         packet_length = self.rx_device._read_u8(_RH_RF95_REG_13_RX_NB_BYTES)
         if packet_length < 6:
-            print(f"RFM9x: Incomplete message (packet_length = {packet_length} < 6), packet = {str(packet)}")
+            print(
+                f"RFM9x: Incomplete message (packet_length = {packet_length} < 6), packet = {str(packet)}"
+            )
             return None
 
         # Reject if the packet does not pass the checksum
@@ -1220,8 +1239,9 @@ class Radiohead:
             if not bsd_checksum(packet[:-2]) == packet[-2:]:
                 if debug:
                     print(
-                        f"RFM9X: Checksum Failed, packet = {str(packet)}, bsd_checksum(packet[:-2])" +
-                        f" = {bsd_checksum(packet[:-2])}, packet[-2:] = {packet[-2:]}")
+                        f"RFM9X: Checksum Failed, packet = {str(packet)}, bsd_checksum(packet[:-2])"
+                        + f" = {bsd_checksum(packet[:-2])}, packet[-2:] = {packet[-2:]}"
+                    )
                 self.checksum_error_count += 1
                 return packet
             else:
@@ -1229,14 +1249,17 @@ class Radiohead:
                 packet = packet[:-2]
 
         # Reject if the packet wasn't sent to my address
-        if (self.node != _RH_BROADCAST_ADDRESS and
-                packet[0] != _RH_BROADCAST_ADDRESS and
-                packet[0] != self.node):
+        if (
+            self.node != _RH_BROADCAST_ADDRESS
+            and packet[0] != _RH_BROADCAST_ADDRESS
+            and packet[0] != self.node
+        ):
             if debug:
                 print(
-                    "RFM9X: Incorrect Address " +
-                    f"(packet address = {packet[0]} != my address = {self.node}), " +
-                    f"packet = {str(packet)}")
+                    "RFM9X: Incorrect Address "
+                    + f"(packet address = {packet[0]} != my address = {self.node}), "
+                    + f"packet = {str(packet)}"
+                )
             return None
 
         # # send ACK unless this was an ACK or a broadcast
@@ -1266,7 +1289,7 @@ class Radiohead:
         #     else:  # save the packet identifier for this source
         #         self.seen_ids[packet[2]] = packet[3]
 
-        if (not with_header):  # skip the header if not wanted
+        if not with_header:  # skip the header if not wanted
             packet = packet[5:]
 
         if debug:
@@ -1337,13 +1360,17 @@ class Radiohead:
 
         # Read the data from the radio FIFO
         packet = bytearray(_MAX_FIFO_LENGTH)
-        packet_length = self.rx_device._read_until_flag(_RH_RF95_REG_00_FIFO, packet, self.rx_device.fifo_empty)
+        packet_length = self.rx_device._read_until_flag(
+            _RH_RF95_REG_00_FIFO, packet, self.rx_device.fifo_empty
+        )
 
         # Reject if the received packet is too small to include the 1 byte length, the
         # 4 byte RadioHead header and at least one byte of data
         if packet_length < 6:
             if debug:
-                print(f"RFM9X: Incomplete message (packet_length = {packet_length} < 6, packet = {str(packet)})")
+                print(
+                    f"RFM9X: Incomplete message (packet_length = {packet_length} < 6, packet = {str(packet)})"
+                )
             return None
 
         # Reject if the length recorded in the packet doesn't match the amount of data we got
@@ -1351,9 +1378,10 @@ class Radiohead:
         if internal_packet_length != packet_length - 1:
             if debug:
                 print(
-                    f"RFM9X: Received packet length ({packet_length}) " +
-                    f"does not match transmitted packet length ({internal_packet_length}), " +
-                    f"packet = {str(packet)}")
+                    f"RFM9X: Received packet length ({packet_length}) "
+                    + f"does not match transmitted packet length ({internal_packet_length}), "
+                    + f"packet = {str(packet)}"
+                )
             return None
 
         packet = packet[:packet_length]
@@ -1362,8 +1390,9 @@ class Radiohead:
             if not bsd_checksum(packet[:-2]) == packet[-2:]:
                 if debug:
                     print(
-                        f"RFM9X: Checksum failed, packet = {str(packet)}, bsd_checksum(packet[:-2])" +
-                        f" = {bsd_checksum(packet[:-2])}, packet[-2:] = {packet[-2:]}")
+                        f"RFM9X: Checksum failed, packet = {str(packet)}, bsd_checksum(packet[:-2])"
+                        + f" = {bsd_checksum(packet[:-2])}, packet[-2:] = {packet[-2:]}"
+                    )
                 self.checksum_error_count += 1
                 return None
             else:
@@ -1371,20 +1400,25 @@ class Radiohead:
                 packet = packet[:-2]
 
         # Reject if the packet wasn't sent to my address
-        if (self.node != _RH_BROADCAST_ADDRESS and
-                packet[1] != _RH_BROADCAST_ADDRESS and
-                packet[1] != self.node):
+        if (
+            self.node != _RH_BROADCAST_ADDRESS
+            and packet[1] != _RH_BROADCAST_ADDRESS
+            and packet[1] != self.node
+        ):
             if debug:
                 print(
-                    "RFM9X: Incorrect Address " +
-                    f"(packet address = {packet[1]} != my address = {self.node}), " +
-                    f"packet = {str(packet)}")
+                    "RFM9X: Incorrect Address "
+                    + f"(packet address = {packet[1]} != my address = {self.node}), "
+                    + f"packet = {str(packet)}"
+                )
             return None
 
         # send ACK unless this was an ACK or a broadcast
-        if (with_ack and
-                ((packet[4] & _RH_FLAGS_ACK) == 0) and
-                (packet[1] != _RH_BROADCAST_ADDRESS)):
+        if (
+            with_ack
+            and ((packet[4] & _RH_FLAGS_ACK) == 0)
+            and (packet[1] != _RH_BROADCAST_ADDRESS)
+        ):
             # delay before sending Ack to give receiver a chance to get ready
             if self.ack_delay is not None:
                 await tasko.sleep(self.ack_delay)
@@ -1401,14 +1435,16 @@ class Radiohead:
             # reject this packet if its identifier was the most recent one from its source
             # TODO: Make sure identifiers are being changed for each packet
             if (self.seen_ids[packet[2]] == packet[3]) and (
-                    packet[4] & _RH_FLAGS_RETRY):
+                packet[4] & _RH_FLAGS_RETRY
+            ):
                 if debug:
-                    print(f"RFM9X: dropping retried packet, packet = {str(packet)}")
+                    print(
+                        f"RFM9X: dropping retried packet, packet = {str(packet)}")
                 return None
             else:  # save the packet identifier for this source
                 self.seen_ids[packet[2]] = packet[3]
 
-        if (not with_header):  # skip the header if not wanted
+        if not with_header:  # skip the header if not wanted
             packet = packet[5:]
 
         if debug:
@@ -1424,5 +1460,5 @@ def bsd_checksum(bytedata):
     for b in bytedata:
         checksum = (checksum >> 1) + ((checksum & 1) << 15)
         checksum += b
-        checksum &= 0xffff
-    return bytes([checksum >> 8, checksum & 0xff])
+        checksum &= 0xFFFF
+    return bytes([checksum >> 8, checksum & 0xFF])
