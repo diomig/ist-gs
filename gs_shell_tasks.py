@@ -34,7 +34,8 @@ async def read_loop(radio, debug=False):
 
 
 def human_time_stamp():
-    """Returns a human readable time stamp in the format: 'year.month.day hour:min'
+    """Returns a human readable time stamp in the format:
+    'year.month.day hour:min'
     Gets the local time."""
     t = gc.time.localtime()
     return f"{t.tm_year:4}.{t.tm_mon:02}.{t.tm_mday:02}.{t.tm_hour:02}:{t.tm_min:02}:{t.tm_sec:02}"

@@ -1,11 +1,14 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 import kaitaistruct
-from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
+from kaitaistruct import BytesIO, KaitaiStream, KaitaiStruct
 
+if getattr(kaitaistruct, "API_VERSION", (0, 9)) < (0, 9):
+    raise Exception(
+        "Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s"
+        % (kaitaistruct.__version__)
+    )
 
-if getattr(kaitaistruct, 'API_VERSION', (0, 9)) < (0, 9):
-    raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Prometheus(KaitaiStruct):
     def __init__(self, _io, _parent=None, _root=None):
@@ -38,7 +41,6 @@ class Prometheus(KaitaiStruct):
             self.sun_yp = self._io.read_u2le()
             self.sun_zp = self._io.read_u2le()
 
-
     class Image(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
@@ -49,7 +51,6 @@ class Prometheus(KaitaiStruct):
         def _read(self):
             self.total = self._io.read_u1()
             self.segment = self._io.read_bytes(250)
-
 
     class Header(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
@@ -63,7 +64,6 @@ class Prometheus(KaitaiStruct):
             self.node = self._io.read_bytes(1)
             self.identifier = self._io.read_bytes(1)
             self.flags = self._io.read_bytes(1)
-
 
     class ImuType(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
@@ -84,7 +84,6 @@ class Prometheus(KaitaiStruct):
             self.mag_z = self._io.read_f4le()
             self.temp = self._io.read_f4le()
 
-
     class Telemetry(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
@@ -97,6 +96,3 @@ class Prometheus(KaitaiStruct):
             self.sun_sensor = Prometheus.SunSensorType(self._io, self, self._root)
             self.vbatt = self._io.read_f4le()
             self.cpu_temp = self._io.read_f4le()
-
-
-
