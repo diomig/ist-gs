@@ -4,6 +4,8 @@ import shel_utils as su
 
 import gs_commands as gc
 
+import time
+
 
 async def send_command_task(radio, command_bytes, args, will_respond, debug=False):
     success, header, response = await gc.send_command(
@@ -37,7 +39,7 @@ def human_time_stamp():
     """Returns a human readable time stamp in the format:
     'year.month.day hour:min'
     Gets the local time."""
-    t = gc.time.localtime()
+    t = time.localtime()
     return f"{t.tm_year:4}.{t.tm_mon:02}.{t.tm_mday:02}.{t.tm_hour:02}:{t.tm_min:02}:{t.tm_sec:02}"
 
 
