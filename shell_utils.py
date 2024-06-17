@@ -3,12 +3,12 @@ A collection of functions for getting and validating inputs
 """
 
 # print formatters
-bold = '\033[1m'
-normal = '\033[0m'
-red = '\033[31m'
-green = '\033[32m'
-yellow = '\033[33m'
-blue = '\033[34m'
+bold = "\033[1m"
+normal = "\033[0m"
+red = "\033[31m"
+green = "\033[32m"
+yellow = "\033[33m"
+blue = "\033[34m"
 
 
 def get_input_discrete(prompt_str, choice_values):
@@ -29,12 +29,13 @@ def get_input_discrete(prompt_str, choice_values):
     return choice
 
 
-def set_param_from_input_discrete(param, prompt_str, choice_values, allow_default=False, type=int):
+def set_param_from_input_discrete(
+    param, prompt_str, choice_values, allow_default=False, type=int
+):
 
     # add "enter" as a choice
     choice_values = [""] + choice_values if allow_default else choice_values
-    prompt_str = prompt_str + \
-        " (enter to skip):" if allow_default else prompt_str
+    prompt_str = prompt_str + " (enter to skip):" if allow_default else prompt_str
 
     choice = get_input_discrete(prompt_str, choice_values)
 
@@ -74,8 +75,7 @@ def get_input_range(prompt_str, choice_range, allow_default=True):
 def set_param_from_input_range(param, prompt_str, choice_range, allow_default=False):
 
     # add "enter" as a choice
-    prompt_str = prompt_str + \
-        " (enter to skip):" if allow_default else prompt_str
+    prompt_str = prompt_str + " (enter to skip):" if allow_default else prompt_str
 
     choice = get_input_range(prompt_str, choice_range)
 
@@ -86,12 +86,24 @@ def set_param_from_input_range(param, prompt_str, choice_range, allow_default=Fa
 
 
 def manually_configure_radio(radio):
-    radio.ack_delay = set_param_from_input_range(radio.ack_delay, f"Acknowledge delay (currently {radio.ack_delay} s)",
-                                                 [0.0, 10.0], allow_default=True)
-    radio.ack_wait = set_param_from_input_range(radio.ack_wait, f"Acknowledge RX Timeout (currently {radio.ack_wait} s)",
-                                                [0.0, 100.0], allow_default=True)
-    radio.receive_timeout = set_param_from_input_range(radio.receive_timeout, f"Receiver timeout (currently {radio.receive_timeout} s)",
-                                                       [0.0, 100.0], allow_default=True)
+    radio.ack_delay = set_param_from_input_range(
+        radio.ack_delay,
+        f"Acknowledge delay (currently {radio.ack_delay} s)",
+        [0.0, 10.0],
+        allow_default=True,
+    )
+    radio.ack_wait = set_param_from_input_range(
+        radio.ack_wait,
+        f"Acknowledge RX Timeout (currently {radio.ack_wait} s)",
+        [0.0, 100.0],
+        allow_default=True,
+    )
+    radio.receive_timeout = set_param_from_input_range(
+        radio.receive_timeout,
+        f"Receiver timeout (currently {radio.receive_timeout} s)",
+        [0.0, 100.0],
+        allow_default=True,
+    )
     if not radio.separate_rx:
         manually_configure_rfm9x(radio.tx_device)
     else:
@@ -102,34 +114,75 @@ def manually_configure_radio(radio):
 
 
 def manually_configure_rfm9x(device):
-    device.frequency_mhz = set_param_from_input_range(device.frequency_mhz, f"Frequency (currently {device.frequency_mhz} MHz)",
-                                                      [240.0, 960.0], allow_default=True)
-    device.tx_power = set_param_from_input_discrete(device.tx_power, f"Power (currently {device.tx_power} dB)",
-                                                    [f"{i}" for i in range(5, 24)], allow_default=True)
-    device.coding_rate = set_param_from_input_discrete(device.coding_rate,
-                                                       f"coding_rate currently {device.coding_rate}",
-                                                       [f"{i}" for i in range(5, 9)],
-                                                       allow_default=True)
-    device.spreading_factor = set_param_from_input_discrete(device.spreading_factor,
-                                                            f"current spreading factor {device.spreading_factor}",
-                                                            [f"{i}" for i in range(6, 13)],
-                                                            allow_default=True)
-    device.signal_bandwidth = set_param_from_input_discrete(device.signal_bandwidth,
-                                                            f"signal bandwidth currently {device.signal_bandwidth}",
-                                                            ["7800", "10400", "15600", "20800", "31250", "41700", "62500", "125000", "250000"],
-                                                            allow_default=True)
-    # device.bitrate = set_param_from_input_range(device.bitrate, f"Bitrate (currently {device.bitrate} bps)",
-    #                                             [500, 300000], allow_default=True)
-    # device.frequency_deviation = set_param_from_input_range(device.frequency_deviation, f"Frequency deviation (currently {device.frequency_deviation})",
-    #                                                         [600, 200000], allow_default=True)
-    # device.rx_bandwidth = set_param_from_input_discrete(device.rx_bandwidth, f"Receiver filter bandwidth (single-sided, currently {device.rx_bandwidth})",
-    #                                                     [f"{device._bw_bins_kHz[i]}" for i in range(len(device._bw_bins_kHz))], allow_default=True, type=float)
-    device.lna_gain = set_param_from_input_discrete(device.lna_gain, f"LNA Gain - [max = 1, min = 6] (currently {device.lna_gain})",
-                                                    [f"{i}" for i in range(1, 7)], allow_default=True)
-    device.preamble_length = set_param_from_input_range(device.preamble_length, f"Preamble length (currently {device.preamble_length})",
-                                                        [3, 2**16], allow_default=True)
-    # device.afc_enable = set_param_from_input_discrete(device.afc_enable, f"Enable automatic frequency calibration (AFC) (currently {device.afc_enable})",
-    #                                                   ["0", "1"], allow_default=True)
+    device.frequency_mhz = set_param_from_input_range(
+        device.frequency_mhz,
+        f"Frequency (currently {device.frequency_mhz} MHz)",
+        [240.0, 960.0],
+        allow_default=True,
+    )
+    device.tx_power = set_param_from_input_discrete(
+        device.tx_power,
+        f"Power (currently {device.tx_power} dB)",
+        [f"{i}" for i in range(5, 24)],
+        allow_default=True,
+    )
+    device.coding_rate = set_param_from_input_discrete(
+        device.coding_rate,
+        f"coding_rate currently {device.coding_rate}",
+        [f"{i}" for i in range(5, 9)],
+        allow_default=True,
+    )
+    device.spreading_factor = set_param_from_input_discrete(
+        device.spreading_factor,
+        f"current spreading factor {device.spreading_factor}",
+        [f"{i}" for i in range(6, 13)],
+        allow_default=True,
+    )
+    device.signal_bandwidth = set_param_from_input_discrete(
+        device.signal_bandwidth,
+        f"signal bandwidth currently {device.signal_bandwidth}",
+        [
+            "7800",
+            "10400",
+            "15600",
+            "20800",
+            "31250",
+            "41700",
+            "62500",
+            "125000",
+            "250000",
+        ],
+        allow_default=True,
+    )
+    # device.bitrate = set_param_from_input_range(device.bitrate, 
+    #       f"Bitrate (currently {device.bitrate} bps)",
+    #       [500, 300000], allow_default=True)
+    # device.frequency_deviation = set_param_from_input_range(device.frequency_deviation, 
+    #       f"Frequency deviation (currently {device.frequency_deviation})",
+    #       [600, 200000], allow_default=True)
+    # device.rx_bandwidth = set_param_from_input_discrete(device.rx_bandwidth, 
+    #       f"Receiver filter bandwidth (single-sided, 
+    #       currently {device.rx_bandwidth})",
+    #       [f"{device._bw_bins_kHz[i]}" for i in range(len(device._bw_bins_kHz))], 
+    #       allow_default=True, type=float)
+    device.lna_gain = set_param_from_input_discrete(
+        device.lna_gain,
+        f"LNA Gain - [max = 1, min = 6] (currently {device.lna_gain})",
+        [f"{i}" for i in range(1, 7)],
+        allow_default=True,
+    )
+    device.preamble_length = set_param_from_input_range(
+        device.preamble_length,
+        f"Preamble length (currently {device.preamble_length})",
+        [3, 2**16],
+        allow_default=True,
+    )
+    # device.afc_enable = set_param_from_input_discrete(
+    #     device.afc_enable,
+    #     f"Enable automatic frequency calibration (AFC) (currently {device.afc_enable})",
+    #     ["0", "1"],
+    #     allow_default=True,
+    # )
 
 
 def print_rfm9x_configuration(device):
