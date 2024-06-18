@@ -1,6 +1,6 @@
 # from gs_commands import *
 # from shell_utils import *
-import shel_utils as su
+import shell_utils as su
 
 import gs_commands as gc
 
