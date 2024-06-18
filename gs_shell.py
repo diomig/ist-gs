@@ -6,10 +6,13 @@ import sys  # noqa
 
 sys.path.append("lib")  # noqa
 
+import board
+
+import gs_commands as gscmd
+import gs_setup as setup  # from gs_setup import *
+import gs_shell_tasks as gstask  # from gs_shell_tasks import *
 import shell_utils as su
 import tasko
-from gs_setup import *
-from gs_shell_tasks import *
 from lib.rxtx_switch import RXTXSwitch
 
 try:
@@ -46,22 +49,22 @@ def print_help():
 
 # setup
 def gs_shell_radio_setup():
-    spi, cs, reset = rpigs_rx_spi_config()
+    spi, cs, reset = setup.rpigs_rx_spi_config()
     rxtx_switch = RXTXSwitch(board.D26, board.D17, board.D27)
-    radio = initialize_radio(spi, cs, reset, rxtx_switch=rxtx_switch)
+    radio = setup.initialize_radio(spi, cs, reset, rxtx_switch=rxtx_switch)
     print(f"{su.bold}{su.green}Raspberry Pi RX{su.normal} initialized")
 
-    print_radio_configuration(radio)
+    su.print_radio_configuration(radio)
 
     if (
-        get_input_discrete(
+        su.get_input_discrete(
             f"Change radio parameters? {su.bold}(y/N){su.normal}", [
                 "", "y", "n"]
         )
         == "y"
     ):
-        manually_configure_radio(radio)
-        print_radio_configuration(radio)
+        su.manually_configure_radio(radio)
+        su.print_radio_configuration(radio)
 
     return radio
 
@@ -70,24 +73,24 @@ def gs_shell_main_loop(radio):
     verbose = True
     while True:
         try:
-            choice = get_input_discrete(
+            choice = su.get_input_discrete(
                 f"\n{su.blue}Choose an action{su.normal}", flattend_prompt_options
             )
             if choice in prompt_options["Receive loop"]:
                 print("Entering receive loop. CTRL-C to exit")
                 while True:
-                    tasko.add_task(read_loop(radio, debug=verbose), 1)
+                    tasko.add_task(gstask.read_loop(radio, debug=verbose), 1)
                     tasko.run()
 
             elif choice in prompt_options["Beacon request loop"]:
-                beacon_period = get_input_range(
+                beacon_period = su.get_input_range(
                     "Request period (seconds)", (10, 1000), allow_default=False
                 )
                 beacon_frequency_hz = 1.0 / float(beacon_period)
                 logname = input("log file name (empty to not log) = ")
 
                 def get_beacon_noargs():
-                    return get_beacon(radio, debug=verbose, logname=logname)
+                    return gstask.get_beacon(radio, debug=verbose, logname=logname)
 
                 tasko.schedule(beacon_frequency_hz, get_beacon_noargs, 10)
                 tasko.run()
@@ -95,27 +98,28 @@ def gs_shell_main_loop(radio):
             elif choice in prompt_options["Upload file"]:
                 source = input("source path = ")
                 dest = input("destination path = ")
-                tasko.add_task(upload_file(
+                tasko.add_task(gscmd.upload_file(
                     radio, source, dest, debug=verbose), 1)
                 tasko.run()
                 tasko.reset()
 
             elif choice in prompt_options["Request file"]:
                 source = input("source path = ")
-                tasko.add_task(request_file(radio, source, debug=verbose), 1)
+                tasko.add_task(gscmd.request_file(
+                    radio, source, debug=verbose), 1)
                 tasko.run()
                 tasko.reset()
 
             elif choice in prompt_options["Send command"]:
-                command_name = get_input_discrete(
-                    "Select a command", list(commands_by_name.keys())
+                command_name = su.get_input_discrete(
+                    "Select a command", list(gscmd.commands_by_name.keys())
                 ).upper()
-                command_bytes = commands_by_name[command_name]["bytes"]
-                will_respond = commands_by_name[command_name]["will_respond"]
+                command_bytes = gscmd.commands_by_name[command_name]["bytes"]
+                will_respond = gscmd.commands_by_name[command_name]["will_respond"]
                 args = input("arguments = ")
 
                 tasko.add_task(
-                    send_command_task(
+                    gstask.send_command_task(
                         radio, command_bytes, args, will_respond, debug=verbose
                     ),
                     1,
@@ -136,12 +140,12 @@ def gs_shell_main_loop(radio):
                         except ValueError:
                             print("Invalid time - must be empty or an integer")
 
-                tasko.add_task(set_time(radio, t, debug=verbose), 1)
+                tasko.add_task(gscmd.set_time(radio, t, debug=verbose), 1)
                 tasko.run()
                 tasko.reset()
 
             elif choice in prompt_options["Get time"]:
-                tasko.add_task(get_time_task(radio, debug=verbose), 1)
+                tasko.add_task(gstask.get_time_task(radio, debug=verbose), 1)
                 tasko.run()
                 tasko.reset()
 
