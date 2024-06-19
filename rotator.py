@@ -50,7 +50,6 @@ class Rotator:
         self.terminate_daemon()
 
 
-
 if __name__ == "__main__":
     rot = Rotator(host, port, model)
 
@@ -67,4 +66,4 @@ if __name__ == "__main__":
 
     except (KeyboardInterrupt, subprocess.TimeoutExpired):
         rot.end()
-        print('\nRotator Terminated')
+        print("\nRotator Terminated")
