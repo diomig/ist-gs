@@ -21,7 +21,7 @@ class Rotator:
     def start_daemon(self):
         self.daemon = subprocess.Popen(
             [
-                "rotctld",
+                conf.daemoncmd, # "rotctld",
                 "-m",
                 self.model,
                 "-T",
@@ -63,7 +63,7 @@ class Rotator:
 
 
 if __name__ == "__main__":
-    rot = Rotator(conf.host, conf.port, conf.model, verbose=True)
+    rot = Rotator(conf.host, conf.port, conf.model)
 
     try:
         while True:
