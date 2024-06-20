@@ -5,7 +5,6 @@ import time
 from lib.configuration import rot_configutarion as conf
 
 
-
 class Rotator:
     def __init__(
         self,
@@ -24,7 +23,7 @@ class Rotator:
         self.verbose = verbose
 
         self.start_daemon()
-        time.sleep(1)
+        time.sleep(1)    # TODO: change this to exception on socket connection
         self.open_socket()
 
     def start_daemon(self):
@@ -90,4 +89,4 @@ if __name__ == "__main__":
         print("\nRotator was interrupted")
     except Exception:
         rot.end()
-        print('\nSome problem occured')
+        print("\nSome problem occured")
