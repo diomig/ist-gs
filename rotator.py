@@ -27,7 +27,7 @@ class Rotator:
         self.verbose = verbose
 
         self.start_daemon()
-        time.sleep(1)
+        time.sleep(2)
         self.open_socket()
 
     def start_daemon(self):
