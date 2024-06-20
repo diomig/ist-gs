@@ -1,6 +1,7 @@
 import socket
 import subprocess
 import time
+
 from lib.configuration import rot_configutarion as conf
 
 # host = "localhost"
@@ -9,11 +10,22 @@ from lib.configuration import rot_configutarion as conf
 
 
 class Rotator:
-    def __init__(self, host, port, model, verbose=False):
+    def __init__(
+        self,
+        host=conf.host,
+        port=conf.port,
+        model=conf.model,
+        device=conf.device,
+        sspeed=conf.sspeed,
+        verbose=False,
+    ):
         self.host = host
         self.port = port
         self.model = model
+        self.device = device
+        self.sspeed = sspeed
         self.verbose = verbose
+
         self.start_daemon()
         time.sleep(1)
         self.open_socket()
@@ -21,14 +33,18 @@ class Rotator:
     def start_daemon(self):
         self.daemon = subprocess.Popen(
             [
-                conf.daemoncmd, # "rotctld",
+                conf.daemoncmd,  # "rotctld",
                 "-m",
                 self.model,
                 "-T",
                 self.host,
                 "-t",
                 str(self.port),
-                "-vvvv" if self.verbose else '',
+                "-r",
+                self.device,
+                "-s",
+                self.sspeed,
+                "-vvvv" if self.verbose else "",
             ]
         )
 
@@ -49,14 +65,14 @@ class Rotator:
         return self.socket.recv(buffsize).decode()
 
     def get_pos(self):
-        return self.command('p').split()
+        return self.command("p").split()
 
     def set_pos(self, az, el):
         cmd = f"P {az} {el}\x0a"
         return self.command(cmd)
 
     def end(self):
-        self.command('q')
+        self.command("q")
         self.close_socket()
         self.terminate_daemon()
         print("\nRotator Terminated")
