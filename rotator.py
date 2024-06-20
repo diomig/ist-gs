@@ -42,7 +42,7 @@ class Rotator:
         self.socket.close()
 
     def get_pos(self):
-        cmd = "p"
+        cmd = "p\x0a"
         buffsize = 20
         self.socket.send(cmd.encode())
         return self.socket.recv(buffsize).decode().split()
@@ -54,6 +54,9 @@ class Rotator:
         return self.socket.recv(buffsize).decode()
 
     def end(self):
+        cmd = 'q\x0a'
+        self.socket.send(cmd.encode())
+        print(self.socket.recv(20))
         self.close_socket()
         self.terminate_daemon()
         print("\nRotator Terminated")
