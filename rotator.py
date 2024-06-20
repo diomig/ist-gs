@@ -13,6 +13,7 @@ class Rotator:
         self.port = port
         self.model = model
         self.start_daemon()
+        time.sleep(1)
         self.open_socket()
 
     def start_daemon(self):
@@ -25,6 +26,7 @@ class Rotator:
                 self.host,
                 "-t",
                 str(self.port),
+                "-vvvvvvvv",
             ]
         )
 
@@ -45,25 +47,33 @@ class Rotator:
         self.socket.send(cmd.encode())
         return self.socket.recv(buffsize).decode().split()
 
+    def set_pos(self, az, el):
+        cmd = f"P {az} {el}\x0a"
+        buffsize = 20
+        self.socket.send(cmd.encode())
+        return self.socket.recv(buffsize).decode()
+
     def end(self):
         self.close_socket()
         self.terminate_daemon()
+        print("\nRotator Terminated")
 
 
 if __name__ == "__main__":
     rot = Rotator(host, port, model)
 
-    # Start the daemon
-    # daemon = start_daemon(rot)
-
-    #   rot.open_socket()
     try:
         while True:
+            prompt = input(">>> ")
 
-            az, el = rot.get_pos()
-            print(f"AZ: {az}; EL: {el}")
-            time.sleep(1)
-
+            if prompt in ["getpos", "g"]:
+                az, el = rot.get_pos()
+                print(f"AZ: {az}; EL: {el}")
+            elif prompt in ["setpos", "s"]:
+                print(rot.set_pos(input("az: "), input("el: ")))
+            elif prompt == "q":
+                rot.end()
+                break
     except (KeyboardInterrupt, subprocess.TimeoutExpired):
         rot.end()
-        print("\nRotator Terminated")
+        print("\nRotator was interrupted")
