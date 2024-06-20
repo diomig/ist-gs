@@ -4,9 +4,6 @@ import time
 
 from lib.configuration import rot_configutarion as conf
 
-# host = "localhost"
-# port = 4533
-# model = "1"
 
 
 class Rotator:
@@ -34,16 +31,11 @@ class Rotator:
         self.daemon = subprocess.Popen(
             [
                 conf.daemoncmd,  # "rotctld",
-                "-m",
-                self.model,
-                "-T",
-                self.host,
-                "-t",
-                str(self.port),
-                "-r",
-                self.device,
-                "-s",
-                str(self.sspeed),
+                f"-m {self.model}",
+                f"-T {self.host}",
+                f"-t {self.port}",
+                f"-r {self.device}",
+                f"-s {self.sspeed}",
                 "-vvvv" if self.verbose else "",
             ]
         )
