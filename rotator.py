@@ -43,7 +43,7 @@ class Rotator:
                 "-r",
                 self.device,
                 "-s",
-                self.sspeed,
+                str(self.sspeed),
                 "-vvvv" if self.verbose else "",
             ]
         )
