@@ -96,3 +96,6 @@ if __name__ == "__main__":
     except (KeyboardInterrupt, subprocess.TimeoutExpired):
         rot.end()
         print("\nRotator was interrupted")
+    except Exception:
+        rot.end()
+        print('\nSome problem occured')
