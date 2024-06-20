@@ -39,7 +39,7 @@ class Rotator:
     def close_socket(self):
         self.socket.close()
 
-    def get_pos_rot(self):
+    def get_pos(self):
         cmd = "p"
         buffsize = 20
         self.socket.send(cmd.encode())
@@ -60,7 +60,7 @@ if __name__ == "__main__":
     try:
         while True:
 
-            az, el = rot.get_pos_rot()
+            az, el = rot.get_pos()
             print(f"AZ: {az}; EL: {el}")
             time.sleep(1)
 
