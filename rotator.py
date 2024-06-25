@@ -10,7 +10,6 @@ with open("lib/configuration/rot_config.yaml", "r") as file:
     config = yaml.safe_load(file)
 
 
-
 class Rotator:
     def __init__(
         self,
@@ -25,7 +24,7 @@ class Rotator:
         self.verbose = verbose
 
         print(self.cmd_options())
-        
+
         self.start_daemon()
         # TODO: replace sleep for a non blocking wait
         time.sleep(3)
