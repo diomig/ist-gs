@@ -11,7 +11,7 @@ ioptron:
     sspeed: 115200         # Serial Speed
 
 local-ioptron:
-    daemoncmd: 'rotctld'
+    daemoncmd: '/home/diomig/Desktop/Hamlib-master/tests/rotctld'
     host: 'localhost'
     port: 4535
     model: '1901'

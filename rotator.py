@@ -9,18 +9,12 @@ from lib.configuration import rot_configutarion as conf
 with open("lib/configuration/rot_config.yaml", "r") as file:
     config = yaml.safe_load(file)
 
-print(config)
 
 
 class Rotator:
     def __init__(
         self,
         rotconfig=config,
-        # host=conf.host,
-        # port=conf.port,
-        # model=conf.model,
-        # device=conf.device if conf.device else None,
-        # sspeed=conf.sspeed if conf.sspeed else None,
         verbose=False,
     ):
         rotname = rotconfig["select"]
@@ -30,22 +24,13 @@ class Rotator:
             setattr(self, attr, config[attr] if attr in config else None)
         self.verbose = verbose
 
+        print(self.cmd_options())
+        
         self.start_daemon()
         # TODO: replace sleep for a non blocking wait
         time.sleep(3)
         if self.host and self.port:
             self.open_socket()
-        """print(
-            [
-                self.daemoncmd,  # "rotctld",
-                f"-m {self.model}",
-                f"-T {self.host}",
-                f"-t {self.port}",
-                # f"-r {self.device}",
-                # f"-s {self.sspeed}",
-                "-vvvv" if self.verbose else "",
-            ]
-        )"""
 
     def cmd_options(self):
         opts = [
