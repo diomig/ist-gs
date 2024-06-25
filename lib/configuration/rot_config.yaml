@@ -1,0 +1,27 @@
+#    Defines the default settings used to configure the rotator
+
+select: 'local-ioptron'
+
+ioptron: 
+    daemoncmd: 'rotctld'
+    host: '10.42.0.236'    # GS IP addr (e.g host = 'localhost')
+    port: 4533             # TCP listening port port (4533 is the default)
+    model: '1901'          # Select rotator model number (IOptron->1901)
+    device: '/dev/ttyUSB0'    # Device port of the rotator
+    sspeed: 115200         # Serial Speed
+
+local-ioptron:
+    daemoncmd: '/home/diomig/Desktop/Hamlib-master/tests/rotctld'
+    host: 'localhost'
+    port: 4535
+    model: '1901'
+    device: '/dev/ttyUSB0'
+    sspeed: 115200
+
+local-dummie:
+    daemoncmd: 'rotctld'
+    host: 'localhost'
+    port: 4533
+    model: '1'
+
+
