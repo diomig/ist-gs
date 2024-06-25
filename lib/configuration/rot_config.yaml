@@ -1,6 +1,6 @@
 #    Defines the default settings used to configure the rotator
 
-select: 'rotctld'
+select: 'ioptron'
 
 ioptron: 
     daemoncmd: 'rotctld'
