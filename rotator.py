@@ -2,42 +2,66 @@ import socket
 import subprocess
 import time
 
+import yaml
+
 from lib.configuration import rot_configutarion as conf
+
+with open("lib/configuration/rot_config.yaml", "r") as file:
+    config = yaml.safe_load(file)
+
+print(config)
 
 
 class Rotator:
     def __init__(
         self,
-        host=conf.host,
-        port=conf.port,
-        model=conf.model,
-        device=conf.device,
-        sspeed=conf.sspeed,
+        rotconfig=config,
+        # host=conf.host,
+        # port=conf.port,
+        # model=conf.model,
+        # device=conf.device if conf.device else None,
+        # sspeed=conf.sspeed if conf.sspeed else None,
         verbose=False,
     ):
-        self.host = host
-        self.port = port
-        self.model = model
-        self.device = device
-        self.sspeed = sspeed
+        rotname = rotconfig["select"]
+        config = rotconfig[rotname]
+        attributes = ["daemoncmd", "host", "port", "model", "device", "sspeed"]
+        for attr in attributes:
+            setattr(self, attr, config[attr] if attr in config else None)
         self.verbose = verbose
 
         self.start_daemon()
-        time.sleep(1)    # TODO: change this to exception on socket connection
-        self.open_socket()
-
-    def start_daemon(self):
-        self.daemon = subprocess.Popen(
+        # TODO: replace sleep for a non blocking wait
+        time.sleep(3)
+        if self.host and self.port:
+            self.open_socket()
+        """print(
             [
-                conf.daemoncmd,  # "rotctld",
+                self.daemoncmd,  # "rotctld",
                 f"-m {self.model}",
                 f"-T {self.host}",
                 f"-t {self.port}",
-                f"-r {self.device}",
-                f"-s {self.sspeed}",
+                # f"-r {self.device}",
+                # f"-s {self.sspeed}",
                 "-vvvv" if self.verbose else "",
             ]
-        )
+        )"""
+
+    def cmd_options(self):
+        opts = [
+            self.daemoncmd,  # "rotctld",
+            f"-m {self.model}" if self.model else "",
+            f"-T {self.host}" if self.host else "",
+            f"-t {self.port}" if self.port else "",
+            f"-r {self.device}" if self.device else "",
+            f"-s {self.sspeed}" if self.sspeed else "",
+            "-vvvv" if self.verbose else "",
+        ]
+
+        return " ".join(opts).split()
+
+    def start_daemon(self):
+        self.daemon = subprocess.Popen(self.cmd_options())
 
     def terminate_daemon(self):
         self.daemon.terminate()
@@ -70,11 +94,11 @@ class Rotator:
 
 
 if __name__ == "__main__":
-    rot = Rotator(conf.host, conf.port, conf.model)
+    rot = Rotator(config, verbose=False)
 
     try:
         while True:
-            prompt = input(">>> ")
+            prompt = input("--> ")
 
             if prompt in ["getpos", "g"]:
                 az, el = rot.get_pos()
