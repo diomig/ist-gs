@@ -1,3 +1,4 @@
 # Ignore all pycache files
 *.pyc
 **/pycache/
+Hamlib/
