@@ -6,7 +6,7 @@ from warnings import warn
 
 import yaml
 
-from shell_utils import red, yellow, bold, normal
+from shell_utils import bold, normal, red, yellow
 
 with open("lib/configuration/rot_config.yaml", "r") as file:
     config = yaml.safe_load(file)
@@ -40,8 +40,12 @@ class Rotator:
 
     def check_config(self):
         if self.daemoncmd is None:
-            raise Exception(f"""{red}Daemon command/path not specified\
-            {normal}""")
+            raise Exception(
+                f"""{red}Daemon command/path not specified\
+            {normal}"""
+            )
+        if self.model is None:
+            warn(f"{yellow}No model specified, using dummie model{normal}")
         if self.host is None:
             self.host = "localhost"
             warn(
@@ -95,6 +99,8 @@ class Rotator:
         return self.command("p").split()
 
     def set_pos(self, az, el):
+        if not (az.isnumeric() and el.isnumeric()):
+            return f"{yellow}Numeric values only!{normal}"
         cmd = f"P {az} {el}\x0a"
         return self.command(cmd)
 
@@ -112,10 +118,10 @@ if __name__ == "__main__":
         while True:
             prompt = input("--> ")
 
-            if prompt in ["getpos", "g", 'p']:
+            if prompt in ["getpos", "g", "p"]:
                 az, el = rot.get_pos()
                 print(f"AZ: {az}; EL: {el}")
-            elif prompt in ["setpos", "s", 'P']:
+            elif prompt in ["setpos", "s", "P"]:
                 print(rot.set_pos(input("az: "), input("el: ")))
             elif prompt == "q":
                 rot.end()
