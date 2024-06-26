@@ -1,10 +1,12 @@
 import socket
 import subprocess
 import time
+from sys import argv
+from warnings import warn
 
 import yaml
 
-from lib.configuration import rot_configutarion as conf
+from shell_utils import red, yellow, bold, normal
 
 with open("lib/configuration/rot_config.yaml", "r") as file:
     config = yaml.safe_load(file)
@@ -16,13 +18,18 @@ class Rotator:
         rotconfig=config,
         verbose=False,
     ):
-        rotname = rotconfig["select"]
+        if len(argv) < 2:
+            rotname = rotconfig["select"]
+        else:
+            rotname = argv[1]
         config = rotconfig[rotname]
         attributes = ["daemoncmd", "host", "port", "model", "device", "sspeed"]
         for attr in attributes:
             setattr(self, attr, config[attr] if attr in config else None)
         self.verbose = verbose
 
+        # TODO: check if necessary options are specified in the YAML
+        self.check_config()
         print(self.cmd_options())
 
         self.start_daemon()
@@ -30,6 +37,27 @@ class Rotator:
         time.sleep(3)
         if self.host and self.port:
             self.open_socket()
+
+    def check_config(self):
+        if self.daemoncmd is None:
+            raise Exception(f"""{red}Daemon command/path not specified\
+            {normal}""")
+        if self.host is None:
+            self.host = "localhost"
+            warn(
+                f"""{yellow}
+            No address specified, using default
+            {bold}(localhost/127.0.0.1)
+            {normal}"""
+            )
+        if self.port is None:
+            self.port = 4533
+            warn(
+                f"""{yellow}
+            No port specified, using default
+            {bold}({self.port})
+            {normal}"""
+            )
 
     def cmd_options(self):
         opts = [
@@ -84,10 +112,10 @@ if __name__ == "__main__":
         while True:
             prompt = input("--> ")
 
-            if prompt in ["getpos", "g"]:
+            if prompt in ["getpos", "g", 'p']:
                 az, el = rot.get_pos()
                 print(f"AZ: {az}; EL: {el}")
-            elif prompt in ["setpos", "s"]:
+            elif prompt in ["setpos", "s", 'P']:
                 print(rot.set_pos(input("az: "), input("el: ")))
             elif prompt == "q":
                 rot.end()
