@@ -5,7 +5,8 @@ from kaitaistruct import BytesIO, KaitaiStream, KaitaiStruct
 
 if getattr(kaitaistruct, "API_VERSION", (0, 9)) < (0, 9):
     raise Exception(
-        "Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s"
+        """Incompatible Kaitai Struct Python API: \
+            0.9 or later is required, but you have %s"""
         % (kaitaistruct.__version__)
     )
 
@@ -93,6 +94,7 @@ class Prometheus(KaitaiStruct):
 
         def _read(self):
             self.imu = Prometheus.ImuType(self._io, self, self._root)
-            self.sun_sensor = Prometheus.SunSensorType(self._io, self, self._root)
+            self.sun_sensor = Prometheus.SunSensorType(
+                self._io, self, self._root)
             self.vbatt = self._io.read_f4le()
             self.cpu_temp = self._io.read_f4le()
