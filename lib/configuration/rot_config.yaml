@@ -22,6 +22,6 @@ local-dummie:
     daemoncmd: 'rotctld'
     host: 'localhost'
     port: 4533
-    #model: '1'
+    model: '1'
 
 
