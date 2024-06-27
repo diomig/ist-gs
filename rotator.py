@@ -12,6 +12,14 @@ with open("lib/configuration/rot_config.yaml", "r") as file:
     config = yaml.safe_load(file)
 
 
+def is_float(val):
+    try:
+        float(val)
+        return True
+    except ValueError:
+        return False
+
+
 class Rotator:
     def __init__(
         self,
@@ -28,7 +36,6 @@ class Rotator:
             setattr(self, attr, config[attr] if attr in config else None)
         self.verbose = verbose
 
-        # TODO: check if necessary options are specified in the YAML
         self.check_config()
         print(self.cmd_options())
 
@@ -45,12 +52,12 @@ class Rotator:
             {normal}"""
             )
         if self.model is None:
-            warn(f"{yellow}No model specified, using dummie model{normal}")
+            warn(f"{yellow}No model specified. Using dummie model{normal}")
         if self.host is None:
             self.host = "localhost"
             warn(
                 f"""{yellow}
-            No address specified, using default
+            No address specified. Using default
             {bold}(localhost/127.0.0.1)
             {normal}"""
             )
@@ -99,7 +106,7 @@ class Rotator:
         return self.command("p").split()
 
     def set_pos(self, az, el):
-        if not (az.isnumeric() and el.isnumeric()):
+        if not (is_float(az) and is_float(el)):
             return f"{yellow}Numeric values only!{normal}"
         cmd = f"P {az} {el}\x0a"
         return self.command(cmd)
