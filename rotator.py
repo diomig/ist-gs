@@ -52,7 +52,7 @@ class Rotator:
             {normal}"""
             )
         if self.model is None:
-            warn(f"{yellow}No model specified. Using dummie model{normal}")
+            warn(f"{yellow}No model specified. Using dummy model{normal}")
         if self.host is None:
             self.host = "localhost"
             warn(

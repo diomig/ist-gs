@@ -18,7 +18,7 @@ local-ioptron:
     device: '/dev/ttyUSB0'
     sspeed: 115200
 
-local-dummie:
+local-dummy:
     daemoncmd: 'rotctld'
     host: 'localhost'
     port: 4533
