@@ -9,7 +9,8 @@ import digitalio
 
 from lib import pycubed_rfm9x
 from lib.configuration import radio_configuration as rf_config
-from shell_utils import bold, normal
+
+# from shell_utils import bold, normal
 
 
 def initialize_rfm9x(spi, cs, reset):
