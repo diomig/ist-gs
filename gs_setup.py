@@ -65,7 +65,7 @@ def initialize_radio(
     return initialize_radiohead(tx_device, rx_device=rx_device, rxtx_switch=rxtx_switch)
 
 
-def rpigs_rx_spi_config():
+def init_spi():
     spi = busio.SPI(board.SCK, MOSI=board.MOSI, MISO=board.MISO)
 
     cs = digitalio.DigitalInOut(board.CE0)
