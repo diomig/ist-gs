@@ -4,12 +4,13 @@ import time
 from sys import argv
 from warnings import warn
 
-import yaml
+# import yaml
+import json
 
 from shell_utils import bold, normal, red, yellow
 
-with open("lib/configuration/rot_config.yaml", "r") as file:
-    config = yaml.safe_load(file)
+with open("lib/configuration/rot_config.json", "r") as file:
+    config = json.load(file)
 
 
 def is_float(val):
@@ -30,7 +31,8 @@ class Rotator:
             rotname = rotconfig["select"]
         else:
             rotname = argv[1]
-        config = rotconfig[rotname]
+        config = rotconfig['presets'][rotname]
+        print(config)
         attributes = ["daemoncmd", "host", "port", "model", "device", "sspeed"]
         for attr in attributes:
             setattr(self, attr, config[attr] if attr in config else None)
