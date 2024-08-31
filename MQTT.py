@@ -52,8 +52,8 @@ def on_connect(client, userdata, flags, rc):
 
 
 # Define the on_message callback function
-def on_message(client, userdata, msg):
-    print(f"Received message on {msg.topic}: {msg.payload.decode()}")
+# def on_message(client, userdata, msg):
+#     print(f"Received message on {msg.topic}: {msg.payload.decode()}")
 
 
 # Initialize the MQTT client
@@ -61,38 +61,39 @@ mqttC = mqtt_client.Client()
 
 # Assign the callback functions
 mqttC.on_connect = on_connect
-mqttC.on_message = on_message
+# mqttC.on_message = on_message
 
 # Connect to the broker
-mqttC.connect(broker_address, broker_port)
+# mqttC.connect(broker_address, broker_port)
 
 # Start the MQTT client loop
-mqttC.loop_start()
+# mqttC.loop_start()
 
 # Publish messages to the topics
-try:
-    while True:
-        cmd = input("user cmd:").split()
-        if len(cmd) > 1:
-            topic, value = cmd
-        else:
-            continue
+if __name__ == '__main__':
+    try:
+        while True:
+            cmd = input("user cmd:").split()
+            if len(cmd) > 1:
+                topic, value = cmd
+            else:
+                continue
 
-        if topic not in pub_topics:
-            print("Topic not available")
-        print(mqttC.publish(globalName + topic, value))
-        """
-        for i, topic in enumerate(topics):
-            message = f"Message from Program 2 to {topic}"
-            mqttC.publish(topic, message)
-            print(f"Published message to {topic}: {message}")
-            time.sleep(1)
-        time.sleep(5)  # Delay between each round of publishing
-        """
-except KeyboardInterrupt:
+            if topic not in pub_topics:
+                print("Topic not available")
+            print(mqttC.publish(globalName + topic, value))
+            """
+            for i, topic in enumerate(topics):
+                message = f"Message from Program 2 to {topic}"
+                mqttC.publish(topic, message)
+                print(f"Published message to {topic}: {message}")
+                time.sleep(1)
+            time.sleep(5)  # Delay between each round of publishing
+            """
+    except KeyboardInterrupt:
+        mqttC.loop_stop()
+        mqttC.disconnect()
+
+    # Stop the MQTT client loop and disconnect
     mqttC.loop_stop()
     mqttC.disconnect()
-
-# Stop the MQTT client loop and disconnect
-mqttC.loop_stop()
-mqttC.disconnect()
