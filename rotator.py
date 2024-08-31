@@ -74,7 +74,7 @@ class Rotator:
 
     def cmd_options(self):
         opts = [
-            self.daemoncmd,  # "rotctld",
+            "rotctld",
             f"-m {self.model}" if self.model else "",
             f"-T {self.host}" if self.host else "",
             f"-t {self.port}" if self.port else "",
