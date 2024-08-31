@@ -1,6 +1,49 @@
 import paho.mqtt.client as mqtt_client
+from rotator import rot
 
 globalName = "myGS/"
+
+
+def set_rothost(host):
+    print(f"The rotator host is now {host}")
+    rot.host = host
+
+
+def set_rotport(port):
+    print(f"Rot Port -> {port}")
+    rot.port = port
+
+
+def set_rotmodel(model):
+    print(f"Rot model -> {model}")
+    rot.model = model
+
+
+def set_rotdev(dev):
+    print(f"Rot dev -> {dev}")
+    rot.device = dev
+
+
+def set_rotsspeed(sspeed):
+    print(f"Rot serial speed -> {sspeed}")
+    rot.sspeed = sspeed
+
+
+def set_rotselect(preset):
+    if not preset:
+        print("No preset selected, using given parameters")
+        try:
+            rot.end()
+        except Exception:
+            print('Nothing to see here')
+        rot.start_daemon()
+        rot.open_socket()
+    else:
+        print(f"Rotator Preset -> {preset}")
+
+
+def set_newpreset(preset):
+    print(f"New preset:\n\t{preset}")
 
 
 mqttTopics = {
@@ -18,13 +61,13 @@ mqttTopics = {
     f"{globalName}radio/rxto": "rxto",
     # Rotator
     f"{globalName}rot/daemon": "daemon",
-    f"{globalName}rot/host": "host",
-    f"{globalName}rot/port": "port",
-    f"{globalName}rot/dev": "dev",
-    f"{globalName}rot/sspeed": "sspeed",
-    f"{globalName}rot/model": "model",
-    f"{globalName}rot/select": "select",
-    f"{globalName}rot/newpreset": "newpreset",
+    f"{globalName}rot/host": set_rothost,
+    f"{globalName}rot/port": set_rotport,
+    f"{globalName}rot/dev": set_rotdev,
+    f"{globalName}rot/sspeed": set_rotsspeed,
+    f"{globalName}rot/model": set_rotmodel,
+    f"{globalName}rot/select": set_rotselect,
+    f"{globalName}rot/newpreset": set_newpreset,
 }
 
 # Define the MQTT topics
@@ -70,7 +113,7 @@ mqttC.on_connect = on_connect
 # mqttC.loop_start()
 
 # Publish messages to the topics
-if __name__ == '__main__':
+if __name__ == "__main__":
     try:
         while True:
             cmd = input("user cmd:").split()

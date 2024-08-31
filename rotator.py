@@ -120,6 +120,8 @@ class Rotator:
         print("\nRotator Terminated")
 
 
+rot = Rotator()
+
 if __name__ == "__main__":
     rot = Rotator(config, verbose=False)
 

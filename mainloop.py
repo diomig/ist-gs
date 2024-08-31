@@ -1,9 +1,14 @@
-from rotator import Rotator
+from rotator import rot
 from MQTT import mqttC, mqttTopics, pub_topics, globalName
 
 
 def on_message(client, userdata, msg):
-    print(f"Received message on {msg.topic}: {msg.payload.decode()}")
+    topic = msg.topic
+    payload = msg.payload.decode()
+    if 'rot' in topic:
+        mqttTopics[topic](payload)
+    else:
+        print(f"Received message on {topic}: {payload}")
 
 
 # Define the MQTT broker address and port
@@ -14,6 +19,7 @@ broker_port = 1883
 mqttC.on_message = on_message
 mqttC.connect(broker_address, broker_port)
 mqttC.loop_start()
+
 
 if __name__ == '__main__':
     try:
