@@ -11,7 +11,7 @@ def set_rothost(host):
 
 def set_rotport(port):
     print(f"Rot Port -> {port}")
-    rot.port = port
+    rot.port = int(port)
 
 
 def set_rotmodel(model):
