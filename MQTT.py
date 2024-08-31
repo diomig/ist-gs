@@ -1,5 +1,6 @@
 import paho.mqtt.client as mqtt_client
 from rotator import rot
+import time
 
 globalName = "myGS/"
 
@@ -37,6 +38,8 @@ def set_rotselect(preset):
         except Exception:
             print('Nothing to see here')
         rot.start_daemon()
+        # WARN: this is just for testing. Don't leave this here! 
+        time.sleep(3)
         rot.open_socket()
     else:
         print(f"Rotator Preset -> {preset}")
