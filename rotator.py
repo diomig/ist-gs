@@ -41,11 +41,11 @@ class Rotator:
         self.check_config()
         print(self.cmd_options())
 
-        self.start_daemon()
+#         self.start_daemon()
         # TODO: replace sleep for a non blocking wait
-        time.sleep(3)
-        if self.host and self.port:
-            self.open_socket()
+#         time.sleep(3)
+#         if self.host and self.port:
+#             self.open_socket()
 
     def check_config(self):
         if self.daemoncmd is None:
@@ -87,35 +87,36 @@ class Rotator:
 
     def start_daemon(self):
         self.daemon = subprocess.Popen(self.cmd_options())
+        print('Daemon Started')
 
     def terminate_daemon(self):
         self.daemon.terminate()
         self.daemon.wait()
 
-    def open_socket(self):
-        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.socket.connect((self.host, self.port))
+#     def open_socket(self):
+#         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+#         self.socket.connect((self.host, self.port))
 
-    def close_socket(self):
-        self.socket.close()
+#     def close_socket(self):
+#         self.socket.close()
 
-    def command(self, cmd: str):
-        buffsize = 20
-        self.socket.send((cmd + "\x0a").encode())
-        return self.socket.recv(buffsize).decode()
+#     def command(self, cmd: str):
+#         buffsize = 20
+#         self.socket.send((cmd + "\x0a").encode())
+#         return self.socket.recv(buffsize).decode()
 
-    def get_pos(self):
-        return self.command("p").split()
+#     def get_pos(self):
+#         return self.command("p").split()
 
-    def set_pos(self, az, el):
-        if not (is_float(az) and is_float(el)):
-            return f"{yellow}Numeric values only!{normal}"
-        cmd = f"P {az} {el}\x0a"
-        return self.command(cmd)
+#     def set_pos(self, az, el):
+#         if not (is_float(az) and is_float(el)):
+#             return f"{yellow}Numeric values only!{normal}"
+#         cmd = f"P {az} {el}\x0a"
+#         return self.command(cmd)
 
     def end(self):
-        self.command("q")
-        self.close_socket()
+#         self.command("q")
+#         self.close_socket()
         self.terminate_daemon()
         print("\nRotator Terminated")
 
