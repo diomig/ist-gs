@@ -35,10 +35,15 @@ def set_rotselect(preset):
         print("No preset selected, using given parameters")
         try:
             rot.end()
-            rot.start_daemon()
             # WARN: this is just for testing. Don't leave this here! 
         except Exception:
-            print('Nothing to see here')
+            print('No daemon to end')
+        try:
+            rot.start_daemon()
+        except Exception:
+            print('Could not start daemon')
+
+
     else:
         print(f"Rotator Preset -> {preset}")
 
