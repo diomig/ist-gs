@@ -2,7 +2,7 @@
 Defines the default settings used to configure the RFM9x satellite
 """
 
-CHECKSUM = True
+CHECKSUM = False
 TX_POWER = 23  # dB
 BITRATE = 1200  # bits per second
 FREQUENCY = 433.0  # MHz
