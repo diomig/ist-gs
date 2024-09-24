@@ -1356,7 +1356,7 @@ class Radiohead:
 
         # return packet
 
-    async def _process_packet(self, with_header=False, with_ack=False, debug=False):
+    async def _process_packet(self, with_header=False, with_ack=False, debug=True):
         # TEST:set 'debug' as True regardless
         debug = True
         # Read the data from the radio FIFO
