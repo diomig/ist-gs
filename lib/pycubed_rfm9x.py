@@ -1225,7 +1225,6 @@ class Radiohead:
             with_ack=with_ack,
             timeout=timeout,
         )
-        '''
         if packet is None:
             return None
         packet_length = self.rx_device._read_u8(_RH_RF95_REG_13_RX_NB_BYTES)
@@ -1356,7 +1355,6 @@ class Radiohead:
         #     self.idle()
 
         # return packet
-        '''
 
     async def _process_packet(self, with_header=False, with_ack=False, debug=False):
 
