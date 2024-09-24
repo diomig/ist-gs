@@ -13,5 +13,5 @@ ACK_DELAY = 0.1  # seconds
 ACK_WAIT = 1  # seconds
 RECEIVE_TIMEOUT = 0.5  # seconds
 
-SATELLITE_ID = 0xAB
+SATELLITE_ID = 0xBA # TEST: 0xAB
 GROUNDSTATION_ID = 0xBA
