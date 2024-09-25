@@ -206,7 +206,7 @@ def print_radio_configuration(radio):
     print(f"\tAcknowledge wait = {radio.ack_wait} s")
     print(f"\tReceive timeout = {radio.receive_timeout} s")
     if not radio.separate_rx:
-        print_rfm9x_configuration(radio.tx_device)
+        print_rfm9x_configuration(radio)
     else:
         print(f"\t{yellow}{bold}TX Device Configuration:{normal}")
         print_rfm9x_configuration(radio.tx_device)
