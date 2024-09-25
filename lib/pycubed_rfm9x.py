@@ -496,8 +496,6 @@ class RFM9x:
             # addr[0] = address & 0x7F
 
             device.write_readinto(command, readbuf)  # , in_end=length)
-            print(f'>>> buf: {buf}')
-            print(f'>>> readbuf: {readbuf}')
             buf[:length] = readbuf[1:]
 
     def _read_u8(self, address):
