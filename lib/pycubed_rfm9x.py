@@ -1013,8 +1013,8 @@ class RFM9x:
                 if fifo_length > 0:  # read and clear the FIFO if anything in it
                     current_addr = self._read_u8(_RH_RF95_REG_10_FIFO_RX_CURRENT_ADDR)
                     self._write_u8(_RH_RF95_REG_0D_FIFO_ADDR_PTR, current_addr)
-                    # packet = bytearray(fifo_length)
-                    packet = self.buffview[:fifo_length]
+                    packet = bytearray(fifo_length)
+                    # packet = self.buffview[:fifo_length]
                     # Read the packet.
                     self._read_into(_RH_RF95_REG_00_FIFO, packet)
                 # Clear interrupt.
