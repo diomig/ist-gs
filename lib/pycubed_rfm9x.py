@@ -475,9 +475,7 @@ class RFM9x:
             device.write(self._BUFFER, end=1)
             device.readinto(buf, end=length)
     '''
-    def _read_into(
-        self, address: int, buf: WriteableBuffer, length: Optional[int] = None
-    ) -> None:
+    def _read_into(self, address, buf, length=None):
         # Read a number of bytes from the specified address into the provided
         # buffer.  If length is not specified (the default) the entire buffer
         # will be filled.
