@@ -323,7 +323,8 @@ async def wait_for_message(radio, max_rx_fails=100000, debug=False):
             rx_fails = 0
 
         header, payload = res
-        parse_message(header + payload)
+        # parse_message(header + payload)
+        '''
         oh = header[4]
         # print(oh)
         if oh == headers.DEFAULT or oh == headers.BEACON:
@@ -356,7 +357,8 @@ async def wait_for_message(radio, max_rx_fails=100000, debug=False):
         else:
             print(f"Unrecognized header {oh}")
             return oh, payload
-
+        '''
+        print(res)
 
 def print_message(header, message):
     if header == headers.DEFAULT:
