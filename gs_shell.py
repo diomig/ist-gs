@@ -50,8 +50,9 @@ def print_help():
 # setup
 def gs_shell_radio_setup():
     spi, cs, reset = setup.init_spi()
-    rxtx_switch = RXTXSwitch(board.D26, board.D17, board.D27)
-    radio = setup.initialize_radio(spi, cs, reset, rxtx_switch=rxtx_switch)
+#     rxtx_switch = RXTXSwitch(board.D26, board.D17, board.D27)
+#     radio = setup.initialize_radio(spi, cs, reset, rxtx_switch=rxtx_switch)
+    radio = setup.initialize_rfm9x(spi, cs, reset)
     print(f"{su.bold}{su.green}Raspberry Pi RX{su.normal} initialized")
 
     su.print_radio_configuration(radio)
