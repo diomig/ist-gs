@@ -259,7 +259,8 @@ class RFM9x:
         # a high impedence input or else the chip cannot change modes (trust me!).
         self._reset = reset
         self._reset.switch_to_input(pull=digitalio.Pull.UP)
-
+        # TODO: delete 'separate_rx' object
+        self.separate_rx = False
         # ------ hot-start jump point ------
         if self.hot_start:
             """
