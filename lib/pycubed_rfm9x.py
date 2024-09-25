@@ -462,6 +462,7 @@ class RFM9x:
 
     # pylint: disable=no-member
     # Reconsider pylint: disable when this can be tested
+    '''
     def _read_into(self, address, buf, length=None):
         # Read a number of bytes from the specified address into the provided
         # buffer.  If length is not specified (the default) the entire buffer
@@ -473,6 +474,30 @@ class RFM9x:
             # value (read).
             device.write(self._BUFFER, end=1)
             device.readinto(buf, end=length)
+    '''
+        def _read_into(
+        self, address: int, buf: WriteableBuffer, length: Optional[int] = None
+    ) -> None:
+        # Read a number of bytes from the specified address into the provided
+        # buffer.  If length is not specified (the default) the entire buffer
+        # will be filled.
+        if length is None:
+            length = len(buf) + 1
+        command = bytearray(length + 1)
+        readbuf = bytearray(length + 1)
+        with self._device as device:
+            # Strip out top bit to set 0 value (read).
+            command[0] = address & 0x7F
+
+            # device.write(self._BUFFER, end=1)
+            # device.readinto(buf, end=length)
+            # device.write_readinto(self._BUFFER, buf, out_end=1, in_end=length)
+
+            # addr = bytearray(2)
+            # addr[0] = address & 0x7F
+
+            device.write_readinto(command, readbuf)  # , in_end=length)
+            buf[:length] = readbuf[1:]
 
     def _read_u8(self, address):
         # Read a single byte from the provided address and return it.
