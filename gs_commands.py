@@ -304,7 +304,7 @@ def rebuid_image(data, storage):
         file.write(image)
 
 
-async def wait_for_message(radio, max_rx_fails=10, debug=False):
+async def wait_for_message(radio, max_rx_fails=100000, debug=False):
     data = _data()
 
     rx_fails = 0
