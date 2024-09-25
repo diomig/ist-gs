@@ -957,6 +957,8 @@ class RFM9x:
         debug=False,
         view=False
     ):
+        # TODO: remove 'keep_listening' assetion here
+        keep_listening = True
         """Wait to receive a packet from the receiver. If a packet is found the payload bytes
         are returned, otherwise None is returned (which indicates the timeout elapsed with no
         reception).
