@@ -190,7 +190,7 @@ async def get_time(radio, debug=False):
         return False, None
 
 
-async def receive(rfm9x, with_ack=True, debug=False):
+async def receive(rfm9x, with_ack=False, debug=False):
     """Recieve a packet.  Returns None if no packet was received.
     Otherwise returns (header, payload)"""
 
