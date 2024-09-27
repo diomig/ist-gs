@@ -5,7 +5,7 @@ from MQTT import mqttC, mqttTopics, pub_topics, globalName
 def on_message(client, userdata, msg):
     topic = msg.topic
     payload = msg.payload.decode()
-    if 'rot' in topic:
+    if callable(mqttTopics[topic]):
         mqttTopics[topic](payload)
     else:
         print(f"Received message on {topic}: {payload}")
