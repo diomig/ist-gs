@@ -1,5 +1,3 @@
-import time
-
 import paho.mqtt.client as mqtt_client
 
 from rotator import rot
@@ -14,12 +12,53 @@ def set_freq(val):
     print(f"Carrier frequency -> {val}")
 
 
+def set_bandwidth(val):
+    print(f"Bandwidth -> {val}")
+
+
+def set_code_rate(val):
+    print(f"Code Rate -> 4/{val}")
+
+
+def set_preamble_length(val):
+    print(f"Preamble Length -> {val}")
+
+
 def set_spreading_factor(val):
     print(f"SF -> {val}")
 
 
+def set_tx_power(val):
+    print(f"Tx Power -> {val}")
+
+
+def set_lna_gain(val):
+    print(f"LAN Gain -> {val}")
+
+
+def set_checksum(val):
+    state = "ON" if val else "OFF"
+    print(f"Checksum {state}")
+
+
+def set_ack_delay(val):
+    print(f"ACK Delay -> {val}")
+
+
+def set_ack_wait(val):
+    print(f"ACK Wait -> {val}")
+
+
+def set_rx_timeout(val):
+    print(f"Rx Timeout -> {val}")
+
+
 """ Rotator Parameters
 """
+
+
+def set_rotdaemon(daemon):
+    print(f"Daemon set to {daemon}")
 
 
 def set_rothost(host):
@@ -71,18 +110,18 @@ def set_newpreset(preset):
 mqttTopics = {
     # Radio
     f"{globalName}radio/freq": set_freq,  # "freq",
-    f"{globalName}radio/bw": "bw",
-    f"{globalName}radio/cr": "cr",
-    f"{globalName}radio/plen": "plen",
+    f"{globalName}radio/bw": set_bandwidth,
+    f"{globalName}radio/cr": set_code_rate,
+    f"{globalName}radio/plen": set_preamble_length,
     f"{globalName}radio/sf": set_spreading_factor,  # "sf",
-    f"{globalName}radio/txpwr": "txpwr",
-    f"{globalName}radio/lnag": "lnag",
-    f"{globalName}radio/chksum": "chksum",
-    f"{globalName}radio/ackd": "ackd",
-    f"{globalName}radio/ackw": "ackw",
-    f"{globalName}radio/rxto": "rxto",
+    f"{globalName}radio/txpwr": set_tx_power,
+    f"{globalName}radio/lnag": set_lna_gain,
+    f"{globalName}radio/chksum": set_checksum,
+    f"{globalName}radio/ackd": set_ack_delay,
+    f"{globalName}radio/ackw": set_ack_wait,
+    f"{globalName}radio/rxto": set_rx_timeout,
     # Rotator
-    f"{globalName}rot/daemon": "daemon",
+    f"{globalName}rot/daemon": set_rotdaemon,
     f"{globalName}rot/host": set_rothost,
     f"{globalName}rot/port": set_rotport,
     f"{globalName}rot/dev": set_rotdev,
