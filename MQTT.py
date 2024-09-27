@@ -1,8 +1,25 @@
-import paho.mqtt.client as mqtt_client
-from rotator import rot
 import time
 
+import paho.mqtt.client as mqtt_client
+
+from rotator import rot
+
 globalName = "myGS/"
+
+""" Radio Parameters
+"""
+
+
+def set_freq(val):
+    print(f"Carrier frequency -> {val}")
+
+
+def set_spreading_factor(val):
+    print(f"SF -> {val}")
+
+
+""" Rotator Parameters
+"""
 
 
 def set_rothost(host):
@@ -35,14 +52,13 @@ def set_rotselect(preset):
         print("No preset selected, using given parameters")
         try:
             rot.end()
-            # WARN: this is just for testing. Don't leave this here! 
+            # WARN: this is just for testing. Don't leave this here!
         except Exception:
-            print('No daemon to end')
+            print("No daemon to end")
         try:
             rot.start_daemon()
         except Exception:
-            print('Could not start daemon')
-
+            print("Could not start daemon")
 
     else:
         print(f"Rotator Preset -> {preset}")
@@ -54,11 +70,11 @@ def set_newpreset(preset):
 
 mqttTopics = {
     # Radio
-    f"{globalName}radio/freq": "freq",
+    f"{globalName}radio/freq": set_freq,  # "freq",
     f"{globalName}radio/bw": "bw",
     f"{globalName}radio/cr": "cr",
     f"{globalName}radio/plen": "plen",
-    f"{globalName}radio/sf": "sf",
+    f"{globalName}radio/sf": set_spreading_factor,  # "sf",
     f"{globalName}radio/txpwr": "txpwr",
     f"{globalName}radio/lnag": "lnag",
     f"{globalName}radio/chksum": "chksum",
