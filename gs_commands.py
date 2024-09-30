@@ -358,7 +358,8 @@ async def wait_for_message(radio, max_rx_fails=100000, debug=False):
             print(f"Unrecognized header {oh}")
             return oh, payload
         '''
-        print(res)
+        print('Rx: ', res)
+        return header, payload
 
 def print_message(header, message):
     if header == headers.DEFAULT:
