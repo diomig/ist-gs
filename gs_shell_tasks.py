@@ -5,7 +5,7 @@ import shell_utils as su
 import gs_commands as gc
 
 import time
-
+from MQTT import mqttC, globalName
 
 async def send_command_task(radio, command_bytes, args, will_respond, debug=False):
     success, header, response = await gc.send_command(
@@ -33,6 +33,7 @@ async def read_loop(radio, debug=False):
         header, message = await gc.wait_for_message(radio, debug=debug)
         if header or (message and len(message) > 0):
             gc.print_message(header, message)
+            mqttC.publish(f'{globalName}msg/payload', message)
 
 
 def human_time_stamp():
