@@ -1,8 +1,9 @@
 import gs_setup as setup
+import gs_shell
 import shell_utils as su
 from MQTT import globalName, mqttC, mqttTopics, pub_topics
 from rotator import rot
-import gs_shell
+
 
 def on_message(client, userdata, msg):
     topic = msg.topic
@@ -19,6 +20,7 @@ def radio_setup():
     print("Radio Initialized")
 
     su.print_radio_configuration(radio)
+    return radio
 
 
 # Define the MQTT broker address and port
@@ -36,16 +38,16 @@ if __name__ == "__main__":
         radio = radio_setup()
         gs_shell.print_help()
         gs_shell.gs_shell_main_loop(radio)
-        while True:
-            cmd = input("user cmd:").split()
-            if len(cmd) > 1:
-                topic, value = cmd
-            else:
-                continue
-
-            if topic not in pub_topics:
-                print("Topic not available")
-            print(mqttC.publish(globalName + topic, value))
+    #         while True:
+    #             cmd = input("user cmd:").split()
+    #             if len(cmd) > 1:
+    #                 topic, value = cmd
+    #             else:
+    #                 continue
+    #
+    #             if topic not in pub_topics:
+    #                 print("Topic not available")
+    #             print(mqttC.publish(globalName + topic, value))
 
     except KeyboardInterrupt:
         mqttC.loop_stop()
