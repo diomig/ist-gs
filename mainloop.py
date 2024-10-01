@@ -23,6 +23,7 @@ def radio_setup():
     return radio
 
 
+# TODO: This should not be hardcoded
 # Define the MQTT broker address and port
 broker_address = "10.42.0.236"
 # broker_address = "test.mosquitto.org"  # "localhost"
