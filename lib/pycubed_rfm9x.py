@@ -299,7 +299,6 @@ class RFM9x:
         # No device type check!  Catch an error from the very first request and
         # throw a nicer message to indicate possible wiring problems.
         version = self._read_u8(_RH_RF95_REG_42_VERSION)
-        print('>>>>>>>>>> Version: ', version)
         if version != 18:
             raise RuntimeError(
                 "Failed to find rfm9x with expected version -- check wiring"
