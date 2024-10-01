@@ -4,6 +4,7 @@ import shell_utils as su
 from MQTT import globalName, mqttC, mqttTopics, pub_topics
 from rotator import rot
 
+from radio import radio
 
 def on_message(client, userdata, msg):
     topic = msg.topic
@@ -13,7 +14,7 @@ def on_message(client, userdata, msg):
     else:
         print(f"Received message on {topic}: {payload}")
 
-
+'''
 def radio_setup():
     spi, cs, reset = setup.init_spi()
     radio = setup.initialize_rfm9x(spi, cs, reset)
@@ -21,7 +22,7 @@ def radio_setup():
 
     su.print_radio_configuration(radio)
     return radio
-
+'''
 
 # TODO: This should not be hardcoded
 # Define the MQTT broker address and port
@@ -36,7 +37,7 @@ mqttC.loop_start()
 
 if __name__ == "__main__":
     try:
-        radio = radio_setup()
+        # radio = radio_setup()
         gs_shell.print_help()
         gs_shell.gs_shell_main_loop(radio)
     #         while True:
