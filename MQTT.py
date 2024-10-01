@@ -16,27 +16,39 @@ def set_freq(val):
 
 
 def set_bandwidth(val):
+    bw = float(val)
     print(f"Bandwidth -> {val}")
+    radio.signal_bandwidth = bw
 
 
 def set_code_rate(val):
+    cr = int(val)
     print(f"Code Rate -> 4/{val}")
+    radio.coding_rate = cr
 
 
 def set_preamble_length(val):
+    plen = int(val)
     print(f"Preamble Length -> {val}")
+    radio.preamble_length = plen
 
 
 def set_spreading_factor(val):
+    sf = int(val)
     print(f"SF -> {val}")
+    radio.spreading_factor = sf
 
 
 def set_tx_power(val):
+    txpwr = float(val)
     print(f"Tx Power -> {val}")
+    radio.tx_power = txpwr
 
 
 def set_lna_gain(val):
+    lnag = int(val)
     print(f"LAN Gain -> {val}")
+    radio.lna_boost = lnag
 
 
 def set_checksum(val):
