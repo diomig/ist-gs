@@ -10,8 +10,9 @@ globalName = "myGS/"
 
 
 def set_freq(val):
+    freq = float(val)
     print(f"Carrier frequency -> {val}")
-    radio.frequency_mhz = val / 1e6
+    radio.frequency_mhz = freq / 1e6
 
 
 def set_bandwidth(val):
