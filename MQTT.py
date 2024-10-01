@@ -2,6 +2,8 @@ import paho.mqtt.client as mqtt_client
 
 from rotator import rot
 
+from mainloop import radio
+
 globalName = "myGS/"
 
 """ Radio Parameters
@@ -10,7 +12,7 @@ globalName = "myGS/"
 
 def set_freq(val):
     print(f"Carrier frequency -> {val}")
-
+    radio.frequency_mhz = val/1e6
 
 def set_bandwidth(val):
     print(f"Bandwidth -> {val}")
