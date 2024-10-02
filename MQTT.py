@@ -52,9 +52,10 @@ def set_lna_gain(val):
 
 
 def set_checksum(val):
-    state = "ON" if val else "OFF"
+    state = "ON" if val.lower() == "true" else "OFF"
     print(f"Checksum {state}")
     # TODO: complete this
+
 
 def set_ack_delay(val):
     delay = float(val)
