@@ -54,18 +54,24 @@ def set_lna_gain(val):
 def set_checksum(val):
     state = "ON" if val else "OFF"
     print(f"Checksum {state}")
-
+    # TODO: complete this
 
 def set_ack_delay(val):
+    delay = float(val)
     print(f"ACK Delay -> {val}")
+    radio.ack_delay = delay
 
 
 def set_ack_wait(val):
+    wait = float(val)
     print(f"ACK Wait -> {val}")
+    radio.ack_wait = wait
 
 
 def set_rx_timeout(val):
+    rxto = float(val)
     print(f"Rx Timeout -> {val}")
+    radio.receive_timeout = rxto
 
 
 """ Rotator Parameters
