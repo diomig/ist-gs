@@ -46,7 +46,7 @@ def set_tx_power(val):
 
 
 def set_lna_gain(val):
-    lnag = int(val)
+    lnag = int(float(val))
     print(f"LAN Gain -> {val}")
     radio.lna_boost = lnag
 
