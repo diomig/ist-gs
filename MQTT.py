@@ -128,6 +128,8 @@ def set_rotselect(preset):
 def set_newpreset(preset):
     print(f"New preset:\n\t{preset}")
 
+def send_cmd(cmd):
+    radio.send(cmd)
 
 mqttTopics = {
     # Radio
@@ -151,6 +153,8 @@ mqttTopics = {
     f"{globalName}rot/model": set_rotmodel,
     f"{globalName}rot/select": set_rotselect,
     f"{globalName}rot/newpreset": set_newpreset,
+    # Messaging
+    f"{globalName}msg/cmd": send_cmd,
 }
 
 # Define the MQTT topics
