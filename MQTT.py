@@ -128,8 +128,11 @@ def set_rotselect(preset):
 def set_newpreset(preset):
     print(f"New preset:\n\t{preset}")
 
+
 def send_cmd(cmd):
+    print(f'Tx command: {cmd}')
     radio.send(cmd)
+
 
 mqttTopics = {
     # Radio
