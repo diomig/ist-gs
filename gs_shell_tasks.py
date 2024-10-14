@@ -34,7 +34,8 @@ async def read_loop(radio, debug=False):
         if header or (message and len(message) > 0):
             gc.print_message(header, message)
             mqttC.publish(f'{globalName}msg/payload', header+message)
-            mqttC.publish(f'{globalName}msg/rssi', radio.last_rssi)
+            packetRSSI = radio.last_rssi*16/15-164
+            mqttC.publish(f'{globalName}msg/rssi', packetRSSI)
 
 
 def human_time_stamp():
