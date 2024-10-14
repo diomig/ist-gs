@@ -34,6 +34,7 @@ async def read_loop(radio, debug=False):
         if header or (message and len(message) > 0):
             gc.print_message(header, message)
             mqttC.publish(f'{globalName}msg/payload', header+message)
+            print(f'RSSI:{radio.last_rssi}')
 
 
 def human_time_stamp():
