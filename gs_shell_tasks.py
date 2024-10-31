@@ -36,7 +36,7 @@ async def read_loop(radio, debug=False):
             mqttC.publish(f'{globalName}msg/payload', header+message)
             packetRSSI = radio.last_rssi*16/15-164
             mqttC.publish(f'{globalName}msg/rssi', packetRSSI)
-            print(f'\nSNR: {radio.packet_status}\n\n\n')
+            print(f'\nSNR: {radio._read_u8(_RH_RF95_REG_19_PKT_SNR_VALUE)}\n\n\n')
 
 
 def human_time_stamp():
