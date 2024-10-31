@@ -1,11 +1,11 @@
 # from gs_commands import *
 # from shell_utils import *
-import shell_utils as su
+import time
 
 import gs_commands as gc
+import shell_utils as su
+from MQTT import globalName, mqttC
 
-import time
-from MQTT import mqttC, globalName
 
 async def send_command_task(radio, command_bytes, args, will_respond, debug=False):
     success, header, response = await gc.send_command(
@@ -33,10 +33,10 @@ async def read_loop(radio, debug=False):
         header, message = await gc.wait_for_message(radio, debug=debug)
         if header or (message and len(message) > 0):
             gc.print_message(header, message)
-            mqttC.publish(f'{globalName}msg/payload', header+message)
-            packetRSSI = radio.last_rssi*16/15-164
-            mqttC.publish(f'{globalName}msg/rssi', packetRSSI)
-            print(f'\nSNR: {radio._read_u8(_RH_RF95_REG_19_PKT_SNR_VALUE)}\n\n\n')
+            mqttC.publish(f"{globalName}msg/payload", header + message)
+            packetRSSI = radio.last_rssi * 16 / 15 - 164
+            mqttC.publish(f"{globalName}msg/rssi", packetRSSI)
+            print(f"\nSNR: {radio._read_u8(0x19)}\n\n\n")
 
 
 def human_time_stamp():
@@ -72,5 +72,6 @@ async def get_beacon(radio, debug=False, logname=""):
         )
         timestamped_log_print(bs, logname=logname)
     else:
-        timestamped_log_print("Failed beacon request",
-                              printcolor=su.red, logname=logname)
+        timestamped_log_print(
+            "Failed beacon request", printcolor=su.red, logname=logname
+        )
